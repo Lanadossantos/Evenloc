@@ -20,7 +20,7 @@ class AgendaEventosApp extends StatelessWidget {
     return MaterialApp(
       title: 'EvenLoc',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
         useMaterial3: true,
       ),
       home: const EventListScreen(),

@@ -4,11 +4,51 @@ import '../models/event_model.dart';
 import '../providers/event_provider.dart';
 import 'event_map_screen.dart';
 import 'add_event_screen.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class EventDetailsScreen extends StatelessWidget {
   final Event event;
 
   const EventDetailsScreen({super.key, required this.event});
+
+  Widget _buildMiniMap(Event event) {
+    final lat = event.latitude;
+    final lng = event.longitude;
+
+    if (lat == null || lng == null) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.location_off, size: 40, color: Colors.grey),
+            const SizedBox(height: 8),
+            Text(
+              'Localização indisponível.',
+              style: TextStyle(color: Colors.grey[700]),
+            ),
+          ],
+        ),
+      );
+    }
+
+    final eventLocation = LatLng(lat, lng);
+
+    return GoogleMap(
+      scrollGesturesEnabled: false, 
+      zoomGesturesEnabled: false,
+      
+      initialCameraPosition: CameraPosition(
+        target: eventLocation,
+        zoom: 14,
+      ),
+      markers: {
+        Marker(
+          markerId: MarkerId(event.id ?? 'default'),
+          position: eventLocation,
+        ),
+      },
+    );
+  }
 
   Widget _buildEventInfo() {
     return Column(
@@ -20,21 +60,23 @@ class EventDetailsScreen extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Chip(
-          label: Text(event.type),
-          backgroundColor: Colors.blueGrey[100],
-          labelStyle: const TextStyle(
-            color: Colors.black87,
-            fontWeight: FontWeight.w600,
+          label: Text(
+            event.type,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
           ),
+          backgroundColor: Colors.black, 
         ),
         const SizedBox(height: 16),
 
         const Text(
-          'SOBRE O EVENTO',
+          'SOBRE O EVENTO:',
           style: TextStyle(
-            color: Colors.grey,
+            color: Color.fromARGB(255, 85, 84, 84),
             fontWeight: FontWeight.bold,
-            fontSize: 12,
+            fontSize: 15,
           ),
         ),
         const SizedBox(height: 4),
@@ -67,7 +109,7 @@ class EventDetailsScreen extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, color: Colors.indigo, size: 20),
+        Icon(icon, color: Colors.black, size: 25),
         const SizedBox(width: 8),
         Expanded(
           child: Column(
@@ -125,18 +167,17 @@ class EventDetailsScreen extends StatelessWidget {
     );
   }
 
+
   Widget _buildCoverImage() {
     return Container(
       height: 200,
       decoration: BoxDecoration(
-        color: Colors.grey[300],
         borderRadius: BorderRadius.circular(12),
-        image: DecorationImage(
-          image: NetworkImage(
-            'https://via.placeholder.com/600x200.png?text=Event+Image',
-          ),
-          fit: BoxFit.cover,
-        ),
+        color: Colors.grey[300],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: _buildMiniMap(event),
       ),
     );
   }
@@ -169,7 +210,6 @@ class EventDetailsScreen extends StatelessWidget {
                 listen: false,
               ).deleteEvent(event.id!);
             }
-            // Feche a tela
             Navigator.pop(context);
           },
         ),
@@ -177,7 +217,7 @@ class EventDetailsScreen extends StatelessWidget {
         _buildButton(
           context,
           label: 'Ver no Mapa',
-          color: Colors.blue[100],
+          color: Colors.black,
           onTap: () => Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => EventMapScreen(event: event)),
@@ -207,7 +247,7 @@ class EventDetailsScreen extends StatelessWidget {
         child: Text(
           label,
           style: TextStyle(
-            color: label == 'Deletar' ? Colors.red[900] : Colors.black87,
+            color: color == Colors.black ? Colors.white : (label == 'Deletar' ? Colors.red[900] : Colors.black87),
             fontWeight: FontWeight.bold,
           ),
         ),

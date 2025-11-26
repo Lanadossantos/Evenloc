@@ -18,8 +18,6 @@ class _EventListScreenState extends State<EventListScreen> {
   @override
   void initState() {
     super.initState();
-    // Força o carregamento dos eventos do banco quando a tela é iniciada
-    // Usamos Future.microtask para garantir que o contexto esteja disponível.
     Future.microtask(() => 
         Provider.of<EventProvider>(context, listen: false).carregarEventos());
   }
@@ -37,6 +35,7 @@ class _EventListScreenState extends State<EventListScreen> {
 
     return Scaffold(
       appBar: _buildAppBar(),
+      backgroundColor: const Color.fromARGB(255, 246, 239, 239),
       floatingActionButton: _buildFloatingButton(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -53,10 +52,10 @@ class _EventListScreenState extends State<EventListScreen> {
 
   AppBar _buildAppBar() {
     return AppBar(
-      title: const Text('EvenLoc', style: TextStyle(fontWeight: FontWeight.bold)),
+      title: const Text('EvenLoc', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+      elevation: 4,
       centerTitle: true,
-      elevation: 0,
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
     );
   }
 
@@ -107,6 +106,7 @@ class _EventListScreenState extends State<EventListScreen> {
 
   Widget _buildEventCard(Event event) {
     return Card(
+      color: Colors.white,
       elevation: 2,
       margin: const EdgeInsets.only(bottom: 10),
       child: ListTile(
@@ -126,7 +126,7 @@ class _EventListScreenState extends State<EventListScreen> {
             const SizedBox(height: 4),
             Text(
               '📍 ${event.location}', 
-              style: const TextStyle(color: Colors.grey, fontSize: 13),
+              style: const TextStyle(color: Colors.black87, fontSize: 13),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
@@ -135,8 +135,11 @@ class _EventListScreenState extends State<EventListScreen> {
         
         trailing: Chip(
           label: Text(event.type),
-          backgroundColor: Colors.blueGrey[50],
-          labelStyle: const TextStyle(fontSize: 12),
+          backgroundColor: Colors.black,
+          labelStyle: const TextStyle(
+            fontSize: 12,
+            color: Colors.white, 
+          ),
         ),
         
         onTap: () {

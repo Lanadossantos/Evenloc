@@ -213,7 +213,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.event != null ? 'Editar Evento' : 'Novo Evento'),
+        centerTitle: true,
+        title: Text(widget.event != null ? 'Editar Evento' : 'Novo Evento',  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
